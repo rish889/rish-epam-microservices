@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  micro-sender:
+    build:
+      context: ./micro-sender
+      dockerfile: Dockerfile
+    container_name: micro-sender
+    ports:
+      - "8081:8080"
+    networks:
+      - sender
+    depends_on:
+      - rabbitmq
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+
+  micro-recipient:
+    build:
+      context: ./micro-recipient
+      dockerfile: Dockerfile
+    container_name: micro-recipient
+    ports:
+      - "8082:8080"
+    networks:
+      - recipient
+    depends_on:
+      - rabbitmq
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+
+  micro-collector:
+    build:
+      context: ./micro-collector
+      dockerfile: Dockerfile
+    container_name: micro-collector
+    ports:
+      - "8083:8080"
+    networks:
+      - recipient
+    depends_on:
+      - rabbitmq
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - sender
+      - recipient
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+
+networks:
+  sender:
+    driver: bridge
+  recipient:
+    driver: bridge
