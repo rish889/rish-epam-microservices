@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: micro-sender
     ports:
-      - "8081:8080"
+      - "8081:8081"
     networks:
       - sender
     depends_on:
@@ -21,7 +21,7 @@ services:
       dockerfile: Dockerfile
     container_name: micro-recipient
     ports:
-      - "8082:8080"
+      - "8082:8082"
     networks:
       - recipient
     depends_on:
@@ -35,7 +35,7 @@ services:
       dockerfile: Dockerfile
     container_name: micro-collector
     ports:
-      - "8083:8080"
+      - "8083:8083"
     networks:
       - recipient
     depends_on:
