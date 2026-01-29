@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MetricsConfig {
 
     private final AtomicInteger activeNotifications = new AtomicInteger(0);
-    private final AtomicInteger queuedMessages = new AtomicInteger(0);
     private final Random random = new Random();
 
     @Bean
@@ -45,15 +44,6 @@ public class MetricsConfig {
                 .tag("service", "micro-sender")
                 .register(registry);
         return activeNotifications;
-    }
-
-    @Bean
-    public AtomicInteger queuedMessagesGauge(MeterRegistry registry) {
-        Gauge.builder("messages.queued", queuedMessages, AtomicInteger::get)
-                .description("Number of messages queued for sending")
-                .tag("service", "micro-sender")
-                .register(registry);
-        return queuedMessages;
     }
 
     @Bean
