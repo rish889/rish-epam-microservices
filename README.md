@@ -2,6 +2,11 @@ docker stop $(docker ps -q)
 docker compose up --build
 
 
+Monitoring Stack:
+- Prometheus UI: http://localhost:9090
+- Grafana UI: http://localhost:3000 (admin/admin)
+
+
 
 
 

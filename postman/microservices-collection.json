@@ -85,6 +85,27 @@
 						"description": "Get info about micro-sender service"
 					},
 					"response": []
+				},
+				{
+					"name": "Prometheus Metrics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{baseUrl}}:8081/actuator/prometheus",
+							"protocol": "http",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "8081",
+							"path": [
+								"actuator",
+								"prometheus"
+							]
+						},
+						"description": "Get Prometheus metrics for micro-sender service"
+					},
+					"response": []
 				}
 			]
 		},
@@ -152,6 +173,27 @@
 						"description": "Get info about micro-recipient service"
 					},
 					"response": []
+				},
+				{
+					"name": "Prometheus Metrics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{baseUrl}}:8082/actuator/prometheus",
+							"protocol": "http",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "8082",
+							"path": [
+								"actuator",
+								"prometheus"
+							]
+						},
+						"description": "Get Prometheus metrics for micro-recipient service"
+					},
+					"response": []
 				}
 			]
 		},
@@ -197,6 +239,27 @@
 							]
 						},
 						"description": "Get info about micro-collector service"
+					},
+					"response": []
+				},
+				{
+					"name": "Prometheus Metrics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{baseUrl}}:8083/actuator/prometheus",
+							"protocol": "http",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "8083",
+							"path": [
+								"actuator",
+								"prometheus"
+							]
+						},
+						"description": "Get Prometheus metrics for micro-collector service"
 					},
 					"response": []
 				}
