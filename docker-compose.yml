@@ -39,9 +39,9 @@ services:
     networks:
       - recipient
     depends_on:
-      - rabbitmq
+      - micro-recipient
     environment:
-      - SPRING_RABBITMQ_HOST=rabbitmq
+      - MICRO_RECIPIENT_URL=http://micro-recipient:8082
 
   rabbitmq:
     image: rabbitmq:3-management
