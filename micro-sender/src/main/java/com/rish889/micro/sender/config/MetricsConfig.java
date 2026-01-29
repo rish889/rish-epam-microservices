@@ -7,14 +7,12 @@ import io.micrometer.core.instrument.Timer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Configuration
 public class MetricsConfig {
 
     private final AtomicInteger activeNotifications = new AtomicInteger(0);
-    private final Random random = new Random();
 
     @Bean
     public Timer notificationTimer(MeterRegistry registry) {
