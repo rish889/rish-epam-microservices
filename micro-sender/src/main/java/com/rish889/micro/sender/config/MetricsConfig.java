@@ -1,9 +1,9 @@
 package com.rish889.micro.sender.config;
 
-import io.micrometer.core.aop.TimedAspect;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,8 +17,11 @@ public class MetricsConfig {
     private final Random random = new Random();
 
     @Bean
-    public TimedAspect timedAspect(MeterRegistry registry) {
-        return new TimedAspect(registry);
+    public Timer notificationTimer(MeterRegistry registry) {
+        return Timer.builder("notification.send.time")
+                .description("Time taken to send a notification")
+                .tag("service", "micro-sender")
+                .register(registry);
     }
 
     @Bean
