@@ -92,6 +92,26 @@
 			"name": "Micro Recipient",
 			"item": [
 				{
+					"name": "Get Messages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{baseUrl}}:8082/message",
+							"protocol": "http",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "8082",
+							"path": [
+								"message"
+							]
+						},
+						"description": "Get all collected messages and clear the storage"
+					},
+					"response": []
+				},
+				{
 					"name": "Health Check",
 					"request": {
 						"method": "GET",

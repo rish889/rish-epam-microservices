@@ -1,6 +1,5 @@
 docker stop $(docker ps -q)
-docker compose build
-docker compose up
+docker compose up --build
 
 
 
