@@ -15,7 +15,7 @@
 	<description>micro collector description</description>
 	<properties>
 		<java.version>25</java.version>
-		<spring-cloud.version>2024.0.0</spring-cloud.version>
+		<spring-cloud.version>2025.1.0</spring-cloud.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
