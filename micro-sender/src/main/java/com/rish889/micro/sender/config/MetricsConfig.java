@@ -48,13 +48,4 @@ public class MetricsConfig {
                 .register(registry);
         return activeNotifications;
     }
-
-    @Bean
-    public Gauge randomMetricGauge(MeterRegistry registry) {
-        return Gauge.builder("system.random.value", random, Random::nextDouble)
-                .description("A random value for demonstration purposes")
-                .tag("service", "micro-sender")
-                .tag("type", "random")
-                .register(registry);
-    }
 }
