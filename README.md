@@ -12,9 +12,9 @@ kubectl get pods -A
 
 kubectl describe pod -n microservices -l app=micro-sender
 
-kubectl logs -n microservices -f micro-collector-8d6bc4dc6-nf65r &
-kubectl logs -n microservices -f micro-recipient-7f9cf7b7b7-nll8j &
-kubectl logs -n microservices -f micro-sender-69fff5df77-88bvt &
+kubectl logs -f -n microservices -l app=micro-sender &
+kubectl logs -f -n microservices -l app=micro-recipient &
+kubectl logs -f -n microservices -l app=micro-collector &
 wait
 
 kubectl port-forward -n microservices svc/micro-sender 8081:8081 &
