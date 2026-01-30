@@ -9,8 +9,11 @@ minikube start --driver=docker
 minikube status; kubectl cluster-info
 bash k8s/deploy.sh
 kubectl get pods -A
+kubectl get pods -n microservices --show-labels
 
-kubectl describe pod -n microservices -l app=micro-sender
+kubectl describe pod -n microservices -l app=postgres
+kubectl logs -f -n microservices -l app=postgres
+kubectl logs -n microservices -l app=postgres --tail=-1
 
 kubectl logs -f -n microservices -l app=micro-sender &
 kubectl logs -f -n microservices -l app=micro-recipient &

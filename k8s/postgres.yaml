@@ -45,7 +45,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:latest
+          image: postgres:17
           ports:
             - containerPort: 5432
           env:
@@ -71,9 +71,9 @@ spec:
                 - pg_isready
                 - -U
                 - postgres
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            timeoutSeconds: 5
+            initialDelaySeconds: 20
+            periodSeconds: 20
+            timeoutSeconds: 10
           livenessProbe:
             exec:
               command:
@@ -82,7 +82,7 @@ spec:
                 - postgres
             initialDelaySeconds: 30
             periodSeconds: 30
-            timeoutSeconds: 5
+            timeoutSeconds: 10
             failureThreshold: 3
       volumes:
         - name: postgres-storage
