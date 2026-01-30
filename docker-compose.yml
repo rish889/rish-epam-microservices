@@ -40,8 +40,12 @@ services:
       - recipient
     depends_on:
       - micro-recipient
+      - postgres
     environment:
       - MICRO_RECIPIENT_URL=http://micro-recipient:8082
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/microservices
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
 
   rabbitmq:
     image: rabbitmq:3-management
