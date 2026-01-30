@@ -52,8 +52,4 @@ kubectl port-forward -n microservices svc/micro-sender 8081:8081 &
 kubectl port-forward -n microservices svc/micro-recipient 8082:8082 &
 kubectl port-forward -n microservices svc/micro-collector 8083:8083 &
 kubectl port-forward -n microservices svc/grafana 3000:3000 &
-
-curl -fL -o stern.tar.gz https://github.com/stern/stern/releases/download/v1.33.1/stern_1.33.1_linux_amd64.tar.gz
-tar -xzf stern.tar.gz
-sudo mv stern /usr/local/bin/
-stern --version
+wait
