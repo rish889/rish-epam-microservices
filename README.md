@@ -42,10 +42,10 @@ kubectl describe pod -n microservices -l app=rabbitmq
 kubectl describe pod -n microservices -l app=prometheus
 kubectl describe pod -n microservices -l app=micro-sender
 
-kubectl logs -f -n microservices -l app=rabbitmq
-kubectl logs -f -n microservices -l app=micro-sender
-kubectl logs -f -n microservices -l app=micro-recipient
-kubectl logs -f -n microservices -l app=micro-collector
+kubectl logs -n microservices -f micro-collector-8d6bc4dc6-nf65r &
+kubectl logs -n microservices -f micro-recipient-7f9cf7b7b7-nll8j &
+kubectl logs -n microservices -f micro-sender-69fff5df77-88bvt &
+wait
 
 
 kubectl port-forward -n microservices svc/micro-sender 8081:8081 &
@@ -53,81 +53,7 @@ kubectl port-forward -n microservices svc/micro-recipient 8082:8082 &
 kubectl port-forward -n microservices svc/micro-collector 8083:8083 &
 kubectl port-forward -n microservices svc/grafana 3000:3000 &
 
-
-kubectl apply -f k8s/rabbitmq.yaml
-
-kubectl delete pod micro-collector-6b878c6499-nk6vd -n microservices
-kubectl delete pod micro-recipient-7598588c58-lxb7b -n microservices
-kubectl delete pod micro-recipient-7f9cf7b7b7-lp8wp -n microservices
-kubectl delete pod micro-sender-69fff5df77-b4cnc -n microservices
-kubectl delete pod micro-sender-85c55c5864-s57d2 -n microservices
-
-
-micro-collector-6b878c6499-nk6vd   
-micro-recipient-7598588c58-lxb7b   
-micro-recipient-7f9cf7b7b7-lp8wp   
-micro-sender-69fff5df77-b4cnc      
-micro-sender-85c55c5864-s57d2      
-
-
-docker pull rabbitmq:3-management
-minikube image load rabbitmq:3-management
-docker pull prom/prometheus:latest
-minikube image load prom/prometheus:latest
-
-
-kubectl delete deployment rabbitmq -n microservices && kubectl apply -f /home/rishabh/workspace/rish-epam-microservices/k8s/rabbitmq.yaml
-
-
-
-
-
-
-sudo vim /etc/docker/daemon.json
-{
-"dns": ["8.8.8.8", "8.8.4.4"]
-}
-
-
-
-bash k8s/deploy.sh stuck at
-Waiting for deployments to be ready...
-Waiting for RabbitMQ...
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-minikube start
-eval $(minikube docker-env) && docker build -t micro-sender:latest /home/rishabh/workspace/rish-epam-microservices/micro-sender
-docker build -t micro-sender:latest ./micro-sender
+curl -fL -o stern.tar.gz https://github.com/stern/stern/releases/download/v1.33.1/stern_1.33.1_linux_amd64.tar.gz
+tar -xzf stern.tar.gz
+sudo mv stern /usr/local/bin/
+stern --version
