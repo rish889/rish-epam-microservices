@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: micro-collector
+  namespace: microservices
+  labels:
+    app: micro-collector
+spec:
+  ports:
+    - port: 8083
+      targetPort: 8083
+  selector:
+    app: micro-collector
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-collector
+  namespace: microservices
+  labels:
+    app: micro-collector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micro-collector
+  template:
+    metadata:
+      labels:
+        app: micro-collector
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8083"
+        prometheus.io/path: "/actuator/prometheus"
+    spec:
+      containers:
+        - name: micro-collector
+          image: micro-collector:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8083
+          env:
+            - name: MICRO_RECIPIENT_URL
+              value: "http://micro-recipient:8082"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8083
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8083
+            initialDelaySeconds: 60
+            periodSeconds: 30
