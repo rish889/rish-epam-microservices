@@ -27,8 +27,14 @@ kubectl apply -f "$SCRIPT_DIR/namespace.yaml"
 echo "Deploying RabbitMQ..."
 kubectl apply -f "$SCRIPT_DIR/rabbitmq.yaml"
 
+echo "Deploying PostgreSQL..."
+kubectl apply -f "$SCRIPT_DIR/postgres.yaml"
+
 echo "Waiting for RabbitMQ to be ready..."
 kubectl wait --namespace microservices --for=condition=ready pod -l app=rabbitmq --timeout=120s
+
+echo "Waiting for PostgreSQL to be ready..."
+kubectl wait --namespace microservices --for=condition=ready pod -l app=postgres --timeout=120s
 
 echo "Deploying Prometheus configuration..."
 kubectl apply -f "$SCRIPT_DIR/prometheus-config.yaml"
@@ -69,5 +75,6 @@ echo "  kubectl port-forward -n microservices svc/micro-sender 8081:8081"
 echo "  kubectl port-forward -n microservices svc/micro-recipient 8082:8082"
 echo "  kubectl port-forward -n microservices svc/micro-collector 8083:8083"
 echo "  kubectl port-forward -n microservices svc/rabbitmq 15672:15672"
+echo "  kubectl port-forward -n microservices svc/postgres 5432:5432"
 echo "  kubectl port-forward -n microservices svc/prometheus 9090:9090"
 echo "  kubectl port-forward -n microservices svc/grafana 3000:3000"

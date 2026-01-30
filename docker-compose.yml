@@ -85,6 +85,21 @@ services:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
 
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - sender
+      - recipient
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=microservices
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
 networks:
   sender:
     driver: bridge
@@ -92,3 +107,6 @@ networks:
     driver: bridge
   monitoring:
     driver: bridge
+
+volumes:
+  postgres_data:
