@@ -18,6 +18,9 @@ docker build -t micro-recipient:latest "$PROJECT_DIR/micro-recipient"
 echo "Building micro-collector..."
 docker build -t micro-collector:latest "$PROJECT_DIR/micro-collector"
 
+echo "Building micro-visualizer..."
+docker build -t micro-visualizer:latest "$PROJECT_DIR/micro-visualizer"
+
 echo ""
 echo "=== Deploying to Kubernetes ==="
 
@@ -57,6 +60,9 @@ kubectl apply -f "$SCRIPT_DIR/micro-recipient.yaml"
 echo "Deploying micro-collector..."
 kubectl apply -f "$SCRIPT_DIR/micro-collector.yaml"
 
+echo "Deploying micro-visualizer..."
+kubectl apply -f "$SCRIPT_DIR/micro-visualizer.yaml"
+
 echo ""
 echo "=== Waiting for all pods to be ready ==="
 kubectl wait --namespace microservices --for=condition=ready pod --all --timeout=180s
@@ -74,6 +80,7 @@ echo "To access services, use port-forward:"
 echo "  kubectl port-forward -n microservices svc/micro-sender 8081:8081"
 echo "  kubectl port-forward -n microservices svc/micro-recipient 8082:8082"
 echo "  kubectl port-forward -n microservices svc/micro-collector 8083:8083"
+echo "  kubectl port-forward -n microservices svc/micro-visualizer 8084:8084"
 echo "  kubectl port-forward -n microservices svc/rabbitmq 15672:15672"
 echo "  kubectl port-forward -n microservices svc/postgres 5432:5432"
 echo "  kubectl port-forward -n microservices svc/prometheus 9090:9090"

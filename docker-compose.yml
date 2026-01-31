@@ -47,6 +47,22 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
 
+  micro-visualizer:
+    build:
+      context: ./micro-visualizer
+      dockerfile: Dockerfile
+    container_name: micro-visualizer
+    ports:
+      - "8084:8084"
+    networks:
+      - recipient
+    depends_on:
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/microservices
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq

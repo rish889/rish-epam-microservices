@@ -264,6 +264,94 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Micro Visualizer",
+			"item": [
+				{
+					"name": "Get Saved Messages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{baseUrl}}:8084/saved-messages",
+							"protocol": "http",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "8084",
+							"path": [
+								"saved-messages"
+							]
+						},
+						"description": "Get all saved messages from PostgreSQL database"
+					},
+					"response": []
+				},
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{baseUrl}}:8084/actuator/health",
+							"protocol": "http",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "8084",
+							"path": [
+								"actuator",
+								"health"
+							]
+						},
+						"description": "Check health status of micro-visualizer service"
+					},
+					"response": []
+				},
+				{
+					"name": "Info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{baseUrl}}:8084/actuator/info",
+							"protocol": "http",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "8084",
+							"path": [
+								"actuator",
+								"info"
+							]
+						},
+						"description": "Get info about micro-visualizer service"
+					},
+					"response": []
+				},
+				{
+					"name": "Prometheus Metrics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{baseUrl}}:8084/actuator/prometheus",
+							"protocol": "http",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"port": "8084",
+							"path": [
+								"actuator",
+								"prometheus"
+							]
+						},
+						"description": "Get Prometheus metrics for micro-visualizer service"
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

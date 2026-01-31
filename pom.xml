@@ -17,6 +17,7 @@
         <module>micro-sender</module>
         <module>micro-recipient</module>
         <module>micro-collector</module>
+        <module>micro-visualizer</module>
     </modules>
 
 </project>
