@@ -28,6 +28,11 @@ kubectl port-forward -n microservices svc/micro-visualizer 8084:8084 &
 kubectl port-forward -n microservices svc/grafana 3000:3000 &
 wait
 
+bash k8s/canary-deploy.sh deploy
+bash k8s/canary-deploy.sh status
+bash k8s/canary-deploy.sh promote
+bash k8s/canary-deploy.sh rollback
+
 kubectl get pods -n microservices -l app=micro-collector
 kubectl delete deployment micro-collector -n microservices
 kubectl logs -n microservices -l app=micro-collector,version=canary -f
