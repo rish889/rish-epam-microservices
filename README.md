@@ -27,3 +27,8 @@ kubectl port-forward -n microservices svc/micro-collector 8083:8083 &
 kubectl port-forward -n microservices svc/micro-visualizer 8084:8084 &
 kubectl port-forward -n microservices svc/grafana 3000:3000 &
 wait
+
+kubectl get pods -n microservices -l app=micro-collector
+kubectl delete deployment micro-collector -n microservices
+kubectl logs -n microservices -l app=micro-collector,version=canary -f
+kubectl logs -n microservices -l app=micro-collector,version=stable -f
