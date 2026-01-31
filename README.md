@@ -18,10 +18,12 @@ kubectl logs -n microservices -l app=postgres --tail=-1
 kubectl logs -f -n microservices -l app=micro-sender &
 kubectl logs -f -n microservices -l app=micro-recipient &
 kubectl logs -f -n microservices -l app=micro-collector &
+kubectl logs -f -n microservices -l app=micro-visualizer &
 wait
 
 kubectl port-forward -n microservices svc/micro-sender 8081:8081 &
 kubectl port-forward -n microservices svc/micro-recipient 8082:8082 &
 kubectl port-forward -n microservices svc/micro-collector 8083:8083 &
+kubectl port-forward -n microservices svc/micro-visualizer 8084:8084 &
 kubectl port-forward -n microservices svc/grafana 3000:3000 &
 wait
