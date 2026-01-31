@@ -128,7 +128,7 @@
 								"message"
 							]
 						},
-						"description": "Get all collected messages and clear the storage"
+						"description": "Get one message and remove it from storage (returns 204 if no messages)"
 					},
 					"response": []
 				},

@@ -5,10 +5,9 @@ import com.rish889.micro.collector.entity.CollectedMessage;
 import com.rish889.micro.collector.repository.CollectedMessageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class MessageCollectorScheduler {
@@ -25,20 +24,21 @@ public class MessageCollectorScheduler {
     }
 
     @Scheduled(fixedRateString = "${scheduler.interval.seconds}000")
-    public void collectMessages() {
-        logger.info("Scheduler triggered - Fetching messages from micro-recipient");
+    public void collectMessage() {
+        logger.info("Scheduler triggered - Fetching one message from micro-recipient");
         try {
-            List<String> messages = microRecipientClient.getMessages();
-            logger.info("Collected {} messages from micro-recipient", messages.size());
-            if (!messages.isEmpty()) {
-                List<CollectedMessage> entities = messages.stream()
-                        .map(CollectedMessage::new)
-                        .toList();
-                messageRepository.saveAll(entities);
-                logger.info("Saved {} messages to database", entities.size());
+            ResponseEntity<String> response = microRecipientClient.getMessage();
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                String message = response.getBody();
+                logger.info("Collected 1 message from micro-recipient");
+                CollectedMessage entity = new CollectedMessage(message);
+                messageRepository.save(entity);
+                logger.info("Saved 1 message to database");
+            } else {
+                logger.info("No messages available from micro-recipient");
             }
         } catch (Exception e) {
-            logger.error("Failed to fetch messages from micro-recipient: {}", e.getMessage());
+            logger.error("Failed to fetch message from micro-recipient: {}", e.getMessage());
         }
     }
 }

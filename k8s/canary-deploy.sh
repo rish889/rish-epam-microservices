@@ -5,21 +5,40 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 NAMESPACE="microservices"
-SERVICE="micro-collector"
 
 usage() {
-    echo "Usage: $0 {deploy|promote|rollback|status}"
+    echo "Usage: $0 <service> {deploy|promote|rollback|status}"
+    echo ""
+    echo "Services: micro-recipient, micro-collector"
     echo ""
     echo "Commands:"
     echo "  deploy   - Build and deploy canary version"
     echo "  promote  - Promote canary to stable (full rollout)"
     echo "  rollback - Remove canary deployment"
     echo "  status   - Show current deployment status"
+    echo ""
+    echo "Examples:"
+    echo "  $0 micro-recipient deploy"
+    echo "  $0 micro-collector promote"
     exit 1
 }
 
+if [ -z "$1" ] || [ -z "$2" ]; then
+    usage
+fi
+
+SERVICE="$1"
+COMMAND="$2"
+
+# Validate service name
+if [[ "$SERVICE" != "micro-recipient" && "$SERVICE" != "micro-collector" ]]; then
+    echo "Error: Invalid service '$SERVICE'"
+    echo "Valid services: micro-recipient, micro-collector"
+    exit 1
+fi
+
 deploy_canary() {
-    echo "=== Deploying Canary Version ==="
+    echo "=== Deploying Canary Version for $SERVICE ==="
 
     echo "Configuring Minikube Docker environment..."
     eval $(minikube docker-env)
@@ -43,16 +62,16 @@ deploy_canary() {
     echo "Monitor canary logs with:"
     echo "  kubectl logs -n ${NAMESPACE} -l app=${SERVICE},version=canary -f"
     echo ""
-    echo "To promote: $0 promote"
-    echo "To rollback: $0 rollback"
+    echo "To promote: $0 $SERVICE promote"
+    echo "To rollback: $0 $SERVICE rollback"
 }
 
 promote_canary() {
-    echo "=== Promoting Canary to Stable ==="
+    echo "=== Promoting Canary to Stable for $SERVICE ==="
 
     # Check if canary exists
     if ! kubectl get deployment ${SERVICE}-canary -n ${NAMESPACE} &> /dev/null; then
-        echo "Error: No canary deployment found"
+        echo "Error: No canary deployment found for $SERVICE"
         exit 1
     fi
 
@@ -79,7 +98,7 @@ promote_canary() {
 }
 
 rollback_canary() {
-    echo "=== Rolling Back Canary ==="
+    echo "=== Rolling Back Canary for $SERVICE ==="
 
     if kubectl get deployment ${SERVICE}-canary -n ${NAMESPACE} &> /dev/null; then
         kubectl delete deployment ${SERVICE}-canary -n ${NAMESPACE}
@@ -93,7 +112,7 @@ rollback_canary() {
 }
 
 show_status() {
-    echo "=== Current Deployment Status ==="
+    echo "=== Current Deployment Status for $SERVICE ==="
     echo ""
     echo "Deployments:"
     kubectl get deployments -n ${NAMESPACE} -l app=${SERVICE} -o wide
@@ -115,7 +134,7 @@ show_status() {
     fi
 }
 
-case "$1" in
+case "$COMMAND" in
     deploy)
         deploy_canary
         ;;

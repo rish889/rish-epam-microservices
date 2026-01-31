@@ -7,8 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 public class MessageController {
 
@@ -21,10 +19,14 @@ public class MessageController {
     }
 
     @GetMapping("/message")
-    public ResponseEntity<List<String>> getMessages() {
+    public ResponseEntity<String> getMessage() {
         logger.info("GET /message endpoint called");
-        List<String> messages = messageStorage.getAndClearMessages();
-        logger.info("Returning {} messages and clearing storage", messages.size());
-        return ResponseEntity.ok(messages);
+        String message = messageStorage.getAndRemoveOneMessage();
+        if (message != null) {
+            logger.info("Returning 1 message from storage");
+            return ResponseEntity.ok(message);
+        }
+        logger.info("No messages available");
+        return ResponseEntity.noContent().build();
     }
 }

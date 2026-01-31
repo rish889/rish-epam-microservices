@@ -21,6 +21,13 @@ public class MessageStorage {
         return currentMessages;
     }
 
+    public String getAndRemoveOneMessage() {
+        if (messages.isEmpty()) {
+            return null;
+        }
+        return messages.removeFirst();
+    }
+
     public int getMessageCount() {
         return messages.size();
     }

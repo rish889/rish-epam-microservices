@@ -29,20 +29,16 @@ kubectl port-forward -n microservices svc/grafana 3000:3000 &
 kubectl port-forward -n microservices svc/prometheus 9090:9090 &
 wait
 
-bash k8s/canary-deploy.sh deploy
-bash k8s/canary-deploy.sh status
-bash k8s/canary-deploy.sh promote
-bash k8s/canary-deploy.sh rollback
+bash k8s/canary-deploy.sh micro-recipient deploy
+bash k8s/canary-deploy.sh micro-recipient status
+bash k8s/canary-deploy.sh micro-recipient promote
+bash k8s/canary-deploy.sh micro-recipient rollback
 
 kubectl get pods -n microservices -l app=micro-collector
 kubectl delete deployment micro-collector -n microservices
 kubectl logs -n microservices -l app=micro-collector,version=canary -f
 kubectl logs -n microservices -l app=micro-collector,version=stable -f
 
-
-kubectl delete deployment grafana -n microservices
-kubectl delete deployment prometheus -n microservices
-
-kubectl apply -f k8s/prometheus-config.yaml -f k8s/grafana-dashboard.yaml && \                                                                                                                                                                                                                
-kubectl rollout restart deployment/prometheus deployment/grafana -n microservices && \                                                                                                                                                                                                        
-kubectl rollout status deployment/prometheus deployment/grafana -n microservices
+kubectl rollout restart deployment/micro-recipient deployment/micro-collector -n microservices
+kubectl rollout restart deployment/micro-recipient -n microservices
+kubectl delete deployment micro-recipient -n microservices
