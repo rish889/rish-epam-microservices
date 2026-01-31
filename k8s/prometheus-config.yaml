@@ -30,3 +30,8 @@ data:
         metrics_path: '/actuator/prometheus'
         static_configs:
           - targets: ['micro-collector:8083']
+
+      - job_name: 'micro-visualizer'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: ['micro-visualizer:8084']
