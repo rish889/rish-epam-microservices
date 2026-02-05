@@ -1,0 +1,132 @@
+version: '3.8'
+
+services:
+  micro-sender:
+    build:
+      context: ./micro-sender
+      dockerfile: Dockerfile
+    container_name: micro-sender
+    ports:
+      - "8081:8081"
+    networks:
+      - sender
+    depends_on:
+      - rabbitmq
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+
+  micro-recipient:
+    build:
+      context: ./micro-recipient
+      dockerfile: Dockerfile
+    container_name: micro-recipient
+    ports:
+      - "8082:8082"
+    networks:
+      - recipient
+    depends_on:
+      - rabbitmq
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+
+  micro-collector:
+    build:
+      context: ./micro-collector
+      dockerfile: Dockerfile
+    container_name: micro-collector
+    ports:
+      - "8083:8083"
+    networks:
+      - recipient
+    depends_on:
+      - micro-recipient
+      - postgres
+    environment:
+      - MICRO_RECIPIENT_URL=http://micro-recipient:8082
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/microservices
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+
+  micro-visualizer:
+    build:
+      context: ./micro-visualizer
+      dockerfile: Dockerfile
+    container_name: micro-visualizer
+    ports:
+      - "8084:8084"
+    networks:
+      - recipient
+    depends_on:
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/microservices
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - sender
+      - recipient
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - monitoring
+      - sender
+      - recipient
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+    networks:
+      - monitoring
+    depends_on:
+      - prometheus
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+
+  postgres:
+    image: postgres:17
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - sender
+      - recipient
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=microservices
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+networks:
+  sender:
+    driver: bridge
+  recipient:
+    driver: bridge
+  monitoring:
+    driver: bridge
+
+volumes:
+  postgres_data:

@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-collector-canary
+  namespace: microservices
+  labels:
+    app: micro-collector
+    version: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micro-collector
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: micro-collector
+        version: canary
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8083"
+        prometheus.io/path: "/actuator/prometheus"
+    spec:
+      containers:
+        - name: micro-collector
+          image: micro-collector:canary
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8083
+          env:
+            - name: MICRO_RECIPIENT_URL
+              value: "http://micro-recipient:8082"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres:5432/microservices"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "postgres"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "postgres"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8083
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8083
+            initialDelaySeconds: 60
+            periodSeconds: 30
